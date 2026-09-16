@@ -1,56 +1,82 @@
 package edu.eci.dosw.tdd.skyrescue.center;
 
 import edu.eci.dosw.tdd.skyrescue.drone.Drone;
+import edu.eci.dosw.tdd.skyrescue.operator.RescueOperator;
+import edu.eci.dosw.tdd.skyrescue.mission.Mission;
+import edu.eci.dosw.tdd.skyrescue.mission.MissionStatus;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class RescueCenterTest {
 
+    private RescueCenter center;
+
+    @BeforeEach
+    void setUp() {
+        center = new RescueCenter();
+    }
+
+    // ==========================================
+    // PRUEBAS addDrone
+    // ==========================================
+
     @Test
     void shouldRegisterDroneWhenDataIsValid() {
-        // Arrange
-        RescueCenter center = new RescueCenter();
         Drone drone = new Drone("D-101", "Rescue-X", 50);
-
-        // Act
         boolean result = center.addDrone(drone);
-
-        // Assert
         assertTrue(result);
     }
+
     @Test
     void shouldReturnFalseWhenDroneIsNull() {
-        // Act
         boolean result = center.addDrone(null);
-
-        // Assert
         assertFalse(result);
     }
 
     @Test
     void shouldReturnFalseWhenDroneIdIsEmpty() {
-        // Arrange
         Drone drone = new Drone("", "Rescue-X", 50);
-
-        // Act
         boolean result = center.addDrone(drone);
-
-        // Assert
         assertFalse(result);
     }
 
     @Test
     void shouldReturnFalseWhenDroneIdAlreadyExists() {
-        // Arrange
         Drone drone1 = new Drone("D-101", "Rescue-X", 50);
         Drone drone2 = new Drone("D-101", "Rescue-Y", 80);
         center.addDrone(drone1);
-
-        // Act
         boolean result = center.addDrone(drone2);
-
-        // Assert
         assertFalse(result);
     }
 
+    // ==========================================
+    // PRUEBAS assignMission (Tus 2 casos)
+    // ==========================================
+
+    @Test
+    void shouldAssignMissionWhenDataIsValid() {
+        Drone drone = new Drone("D-101", "Rescue-X", 50);
+        RescueOperator operator = new RescueOperator("OP-1", "Carlos");
+        
+        center.addDrone(drone);
+        center.addOperator(operator);
+
+        Mission mission = center.assignMission("OP-1", "D-101", "Zona Norte", 30);
+
+        assertNotNull(mission);
+        assertEquals(MissionStatus.ACTIVE, mission.getStatus());
+        assertFalse(drone.isAvailable());
+    }
+
+    @Test
+    void shouldThrowIllegalArgumentExceptionWhenDroneDoesNotExist() {
+        RescueOperator operator = new RescueOperator("OP-1", "Carlos");
+        center.addOperator(operator);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            center.assignMission("OP-1", "D-999", "Zona Norte", 30);
+        });
+    }
 }
