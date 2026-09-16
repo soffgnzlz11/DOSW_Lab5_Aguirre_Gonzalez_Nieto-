@@ -75,4 +75,22 @@ class RescueCenterTest {
             center.assignMission("OP-1", "D-999", "Zona Norte", 30);
         });
     }
+
+    @Test
+    void shouldThrowIllegalStateExceptionWhenDroneIsBusy() {
+        Drone drone = new Drone("D-101", "Rescue-X", 50);
+        RescueOperator operator1 = new RescueOperator("OP-1", "Carlos");
+        RescueOperator operator2 = new RescueOperator("OP-2", "Ana");
+        center.addDrone(drone);
+        center.addOperator(operator1);
+        center.addOperator(operator2);
+
+        // Asigna la primera misión, dejando el dron no disponible
+        center.assignMission("OP-1", "D-101", "Zona Norte", 30);
+
+        // Intenta asignar una segunda misión con el mismo dron
+        assertThrows(IllegalStateException.class, () -> {
+            center.assignMission("OP-2", "D-101", "Zona Sur", 15);
+        });
+    }
 }
