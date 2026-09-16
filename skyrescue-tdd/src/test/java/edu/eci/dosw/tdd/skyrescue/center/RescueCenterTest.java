@@ -93,4 +93,28 @@ class RescueCenterTest {
             center.assignMission("OP-2", "D-101", "Zona Sur", 15);
         });
     }
+
+
+    // tests completeMission
+    @Test
+    void shouldCompleteActiveMissionSuccessfully() {
+        Drone drone = new Drone("D-101", "Rescue-X", 50);
+        RescueOperator operator = new RescueOperator("OP-1", "Carlos");
+        center.addDrone(drone);
+        center.addOperator(operator);
+        Mission mission = center.assignMission("OP-1", "D-101", "Zona Norte", 30);
+
+        center.completeMission(mission.getId());
+
+        assertEquals(MissionStatus.COMPLETED, mission.getStatus());
+        assertNotNull(mission.getEndDate());
+        assertTrue(drone.isAvailable());
+    }
+
+    @Test
+    void shouldThrowIllegalArgumentExceptionWhenMissionDoesNotExist() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            center.completeMission("M-999");
+        });
+    }
 }
