@@ -18,9 +18,7 @@ class RescueCenterTest {
         center = new RescueCenter();
     }
 
-    // ==========================================
-    // PRUEBAS addDrone
-    // ==========================================
+    // tests addDrone
 
     @Test
     void shouldRegisterDroneWhenDataIsValid() {
@@ -51,9 +49,7 @@ class RescueCenterTest {
         assertFalse(result);
     }
 
-    // ==========================================
-    // PRUEBAS assignMission (Tus 2 casos)
-    // ==========================================
+    // tests assignMission
 
     @Test
     void shouldAssignMissionWhenDataIsValid() {
