@@ -38,7 +38,7 @@ public class RescueCenter {
      * @return true if it was registered; false otherwise.
      */
     public boolean addDrone(Drone drone) {
-        if (drone == null || drone.getId()== null || drone.getId().trim().isEmpty()) {
+        if (drone == null || drone.getId() == null || drone.getId().trim().isEmpty()) {
             return false;
         }
         if (drones.containsKey(drone.getId())) {
@@ -67,8 +67,8 @@ public class RescueCenter {
      * - Valid resource but invalid state -> IllegalStateException.
      *
      * @param operatorId operator identifier.
-     * @param droneId drone identifier.
-     * @param location emergency location description.
+     * @param droneId    drone identifier.
+     * @param location   emergency location description.
      * @param distanceKm mission distance in kilometers.
      * @return created mission.
      */
@@ -91,7 +91,7 @@ public class RescueCenter {
         RescueOperator operator = operators.stream()
                 .filter(op -> op.getId().equals(operatorId))
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(() -> new IllegalArgumentException("El operador especificado no existe."));
 
         Mission mission = new Mission(
                 "M-" + (missions.size() + 1),
@@ -100,8 +100,7 @@ public class RescueCenter {
                 drone,
                 operator,
                 java.time.LocalDateTime.now(),
-                MissionStatus.ACTIVE
-        );
+                MissionStatus.ACTIVE);
 
         drone.setAvailable(false);
         missions.add(mission);

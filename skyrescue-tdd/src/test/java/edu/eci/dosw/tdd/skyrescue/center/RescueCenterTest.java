@@ -55,7 +55,7 @@ class RescueCenterTest {
     void shouldAssignMissionWhenDataIsValid() {
         Drone drone = new Drone("D-101", "Rescue-X", 50);
         RescueOperator operator = new RescueOperator("OP-1", "Carlos");
-        
+
         center.addDrone(drone);
         center.addOperator(operator);
 
