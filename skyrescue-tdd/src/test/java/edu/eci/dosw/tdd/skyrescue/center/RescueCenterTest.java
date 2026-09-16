@@ -55,7 +55,7 @@ class RescueCenterTest {
     void shouldAssignMissionWhenDataIsValid() {
         Drone drone = new Drone("D-101", "Rescue-X", 50);
         RescueOperator operator = new RescueOperator("OP-1", "Carlos");
-        
+
         center.addDrone(drone);
         center.addOperator(operator);
 
@@ -73,6 +73,17 @@ class RescueCenterTest {
 
         assertThrows(IllegalArgumentException.class, () -> {
             center.assignMission("OP-1", "D-999", "Zona Norte", 30);
+        });
+    }
+
+    @Test
+    void shouldThrowIllegalArgumentExceptionWhenOperatorDoesNotExist() {
+        Drone drone = new Drone("D-101", "Rescue-X", 50);
+        center.addDrone(drone);
+        // Nota: NO se agrega el operador OP-999 a center
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            center.assignMission("OP-999", "D-101", "Zona Norte", 30);
         });
     }
 }
