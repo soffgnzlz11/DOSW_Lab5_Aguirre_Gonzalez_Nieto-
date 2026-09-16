@@ -77,13 +77,20 @@ class RescueCenterTest {
     }
 
     @Test
-    void shouldThrowIllegalArgumentExceptionWhenOperatorDoesNotExist() {
+    void shouldThrowIllegalStateExceptionWhenDroneIsBusy() {
         Drone drone = new Drone("D-101", "Rescue-X", 50);
+        RescueOperator operator1 = new RescueOperator("OP-1", "Carlos");
+        RescueOperator operator2 = new RescueOperator("OP-2", "Ana");
         center.addDrone(drone);
-        // Nota: NO se agrega el operador OP-999 a center
+        center.addOperator(operator1);
+        center.addOperator(operator2);
 
-        assertThrows(IllegalArgumentException.class, () -> {
-            center.assignMission("OP-999", "D-101", "Zona Norte", 30);
+        // Asigna la primera misión, dejando el dron no disponible
+        center.assignMission("OP-1", "D-101", "Zona Norte", 30);
+
+        // Intenta asignar una segunda misión con el mismo dron
+        assertThrows(IllegalStateException.class, () -> {
+            center.assignMission("OP-2", "D-101", "Zona Sur", 15);
         });
     }
 }

@@ -82,6 +82,8 @@ public class RescueCenter {
         }
 
         Drone drone = drones.get(droneId);
+
+        // Agregar validación faltante:
         if (!drone.isAvailable()) {
             throw new IllegalStateException("El dron ya se encuentra asignado a otra misión.");
         }
