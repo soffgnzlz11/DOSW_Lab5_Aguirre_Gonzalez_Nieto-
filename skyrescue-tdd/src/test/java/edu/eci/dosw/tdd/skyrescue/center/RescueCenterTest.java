@@ -117,4 +117,19 @@ class RescueCenterTest {
             center.completeMission("M-999");
         });
     }
+
+    @Test
+    void shouldThrowIllegalStateExceptionWhenCompletingAlreadyCompletedMission() {
+        Drone drone = new Drone("D-102", "Rescue-Y", 60);
+        RescueOperator operator = new RescueOperator("OP-2", "Ana");
+        center.addDrone(drone);
+        center.addOperator(operator);
+        Mission mission = center.assignMission("OP-2", "D-102", "Zona Sur", 15);
+
+        center.completeMission(mission.getId());
+
+        assertThrows(IllegalStateException.class, () -> {
+            center.completeMission(mission.getId());
+        });
+    }
 }
