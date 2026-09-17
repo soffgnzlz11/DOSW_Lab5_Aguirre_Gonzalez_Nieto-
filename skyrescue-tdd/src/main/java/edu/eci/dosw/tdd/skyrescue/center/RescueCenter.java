@@ -126,10 +126,15 @@ public class RescueCenter {
      * @return completed mission.
      */
     public Mission completeMission(String missionId) {
+
         Mission mission = missions.stream()
                 .filter(m -> m.getId().equals(missionId))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("La misión especificada no existe."));
+
+        if (mission.getStatus() == MissionStatus.COMPLETED) {
+            throw new IllegalStateException("La misión ya se encuentra completada.");
+        }
 
         mission.setStatus(MissionStatus.COMPLETED);
         mission.setEndDate(LocalDateTime.now());
