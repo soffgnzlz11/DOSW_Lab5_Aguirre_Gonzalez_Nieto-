@@ -126,17 +126,26 @@ public class RescueCenter {
      * @return completed mission.
      */
     public Mission completeMission(String missionId) {
+
+        // Nueva validación de id válido (Fase GREEN)
+        if (missionId == null || missionId.trim().isEmpty()) {
+            throw new IllegalArgumentException("El id de la misión no puede ser nulo o vacío.");
+        }
+
         Mission mission = missions.stream()
                 .filter(m -> m.getId().equals(missionId))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("La misión especificada no existe."));
 
+        if (mission.getStatus() == MissionStatus.COMPLETED) {
+            throw new IllegalStateException("La misión ya se encuentra completada.");
+        }
+
         mission.setStatus(MissionStatus.COMPLETED);
         mission.setEndDate(LocalDateTime.now());
         mission.getDrone().setAvailable(true);
         return mission;
-}
-
+    }
 
     public boolean addOperator(RescueOperator operator) {
         return operators.add(operator);
