@@ -94,7 +94,6 @@ class RescueCenterTest {
         });
     }
 
-
     // tests completeMission
     @Test
     void shouldCompleteActiveMissionSuccessfully() {
@@ -132,4 +131,24 @@ class RescueCenterTest {
             center.completeMission(mission.getId());
         });
     }
+
+    @Test
+    void shouldThrowIllegalArgumentExceptionWhenMissionIdIsInvalid() {
+        IllegalArgumentException exceptionNull = assertThrows(
+                IllegalArgumentException.class,
+                () -> center.completeMission(null));
+
+        assertEquals(
+                "El id de la misión no puede ser nulo o vacío.",
+                exceptionNull.getMessage());
+
+        IllegalArgumentException exceptionEmpty = assertThrows(
+                IllegalArgumentException.class,
+                () -> center.completeMission(" "));
+
+        assertEquals(
+                "El id de la misión no puede ser nulo o vacío.",
+                exceptionEmpty.getMessage());
+    }
+
 }
