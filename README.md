@@ -1,7 +1,5 @@
 # DOSW_Lab5_Aguirre_Gonzalez_Nieto-
 
-
-
 ### Ciclo TDD - Finalización Misión (`CompleteMission`)
 
 **RED:** Se agregaron 2 nuevas pruebas unitarias (shouldCompleteActiveMissionSuccessfully y shouldThrowIllegalArgumentExceptionWhenMissionDoesNotExist). Al ejecutar mvn test, la suite reporta Tests run: 9, Failures: 2, confirmando que la lógica para completar una misión aún no estaba implementada en el centro de rescate y no se validaba la existencia de la misión.
@@ -18,5 +16,19 @@
 **REFACTOR:** Se optimizó la búsqueda y actualización de la misión en RescueCenter.java mediante encadenamiento de métodos sobre Optional (orElseThrow), garantizando un código expresivo, libre de verificaciones nulas manuales y desacoplado de la gestión directa del estado del dron.
 
 
+### Cobertura con JaCoCo
 
+## Evidencia de cobertura
+
+### Primera ejecución
+
+![mvn clean verify inicial](skyrescue-tdd/docs/evidence/mvn%20verify%20inicial.png)
+
+![Cobertura inicial](skyrescue-tdd/docs/evidence/coverage-first.png)
+
+### Cobertura final
+
+![mvn clean verify final](skyrescue-tdd/docs/evidence/mvn%20verify%20final.png)
+
+![Cobertura final](skyrescue-tdd/docs/evidence/coverage-final.png)
 
