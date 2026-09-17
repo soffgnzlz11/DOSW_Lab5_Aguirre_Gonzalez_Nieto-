@@ -3,7 +3,8 @@ package edu.eci.dosw.tdd.skyrescue.center;
 import edu.eci.dosw.tdd.skyrescue.drone.Drone;
 import edu.eci.dosw.tdd.skyrescue.mission.Mission;
 import edu.eci.dosw.tdd.skyrescue.operator.RescueOperator;
-
+import edu.eci.dosw.tdd.skyrescue.mission.MissionStatus;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,8 +38,14 @@ public class RescueCenter {
      * @return true if it was registered; false otherwise.
      */
     public boolean addDrone(Drone drone) {
-        // TODO Implement using TDD.
-        return false;
+        if (drone == null || drone.getId() == null || drone.getId().trim().isEmpty()) {
+            return false;
+        }
+        if (drones.containsKey(drone.getId())) {
+            return false;
+        }
+        drones.put(drone.getId(), drone);
+        return true;
     }
 
     /**
@@ -60,8 +67,8 @@ public class RescueCenter {
      * - Valid resource but invalid state -> IllegalStateException.
      *
      * @param operatorId operator identifier.
-     * @param droneId drone identifier.
-     * @param location emergency location description.
+     * @param droneId    drone identifier.
+     * @param location   emergency location description.
      * @param distanceKm mission distance in kilometers.
      * @return created mission.
      */
@@ -70,8 +77,34 @@ public class RescueCenter {
             String droneId,
             String location,
             int distanceKm) {
-        // TODO Implement using TDD.
-        return null;
+        if (!drones.containsKey(droneId)) {
+            throw new IllegalArgumentException("El dron especificado no existe.");
+        }
+
+        Drone drone = drones.get(droneId);
+
+        // Agregar validación faltante:
+        if (!drone.isAvailable()) {
+            throw new IllegalStateException("El dron ya se encuentra asignado a otra misión.");
+        }
+
+        RescueOperator operator = operators.stream()
+                .filter(op -> op.getId().equals(operatorId))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("El operador especificado no existe."));
+
+        Mission mission = new Mission(
+                "M-" + (missions.size() + 1),
+                location,
+                distanceKm,
+                drone,
+                operator,
+                java.time.LocalDateTime.now(),
+                MissionStatus.ACTIVE);
+
+        drone.setAvailable(false);
+        missions.add(mission);
+        return mission;
     }
 
     /**
@@ -93,9 +126,17 @@ public class RescueCenter {
      * @return completed mission.
      */
     public Mission completeMission(String missionId) {
-        // TODO Implement using TDD.
-        return null;
-    }
+        Mission mission = missions.stream()
+                .filter(m -> m.getId().equals(missionId))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("La misión especificada no existe."));
+
+        mission.setStatus(MissionStatus.COMPLETED);
+        mission.setEndDate(LocalDateTime.now());
+        mission.getDrone().setAvailable(true);
+        return mission;
+}
+
 
     public boolean addOperator(RescueOperator operator) {
         return operators.add(operator);
