@@ -127,6 +127,11 @@ public class RescueCenter {
      */
     public Mission completeMission(String missionId) {
 
+        // Nueva validación de id válido (Fase GREEN)
+        if (missionId == null || missionId.trim().isEmpty()) {
+            throw new IllegalArgumentException("El id de la misión no puede ser nulo o vacío.");
+        }
+
         Mission mission = missions.stream()
                 .filter(m -> m.getId().equals(missionId))
                 .findFirst()
@@ -140,8 +145,7 @@ public class RescueCenter {
         mission.setEndDate(LocalDateTime.now());
         mission.getDrone().setAvailable(true);
         return mission;
-}
-
+    }
 
     public boolean addOperator(RescueOperator operator) {
         return operators.add(operator);
