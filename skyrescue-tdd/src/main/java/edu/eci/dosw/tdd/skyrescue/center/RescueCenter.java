@@ -4,7 +4,7 @@ import edu.eci.dosw.tdd.skyrescue.drone.Drone;
 import edu.eci.dosw.tdd.skyrescue.mission.Mission;
 import edu.eci.dosw.tdd.skyrescue.operator.RescueOperator;
 import edu.eci.dosw.tdd.skyrescue.mission.MissionStatus;
-
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -126,9 +126,17 @@ public class RescueCenter {
      * @return completed mission.
      */
     public Mission completeMission(String missionId) {
-        // TODO Implement using TDD.
-        return null;
-    }
+        Mission mission = missions.stream()
+                .filter(m -> m.getId().equals(missionId))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("La misión especificada no existe."));
+
+        mission.setStatus(MissionStatus.COMPLETED);
+        mission.setEndDate(LocalDateTime.now());
+        mission.getDrone().setAvailable(true);
+        return mission;
+}
+
 
     public boolean addOperator(RescueOperator operator) {
         return operators.add(operator);
